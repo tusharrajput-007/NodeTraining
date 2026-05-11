@@ -22,9 +22,12 @@ const lines = fs.readFile(inputFile, "utf-8", (err, data) => {
   const newLines = data.split("\n");
 
   const header = newLines[0];
+  const headers = header.split(",");
+  const jobIdIndex = headers.indexOf("JOB_ID");
+
   const filtered = newLines.slice(1).filter((line) => {
     const columns = line.split(",");
-    return columns[5] === "IT_PROG";
+    return columns[jobIdIndex] === "IT_PROG";
   });
 
   const result = [header, ...filtered].join("\n");
