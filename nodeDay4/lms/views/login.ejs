@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>LMS</title>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui"
+    />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Favicon icon -->
+    <link rel="icon" href="/assets/images/favicon.ico" type="image/x-icon" />
+    <!-- fontawesome icon -->
+    <link
+      rel="stylesheet"
+      href="/assets/fonts/fontawesome/css/fontawesome-all.min.css"
+    />
+    <!-- animation css -->
+    <link
+      rel="stylesheet"
+      href="/assets/plugins/animation/css/animate.min.css"
+    />
+    <!-- vendor css -->
+    <link rel="stylesheet" href="/assets/css/style.css" />
+  </head>
+
+  <body>
+    <div class="blur-bg-images"></div>
+    <div class="auth-wrapper">
+      <div class="auth-content container">
+        <div class="card">
+          <div class="row align-items-center">
+            <div class="col-md-6">
+              <div class="card-body">
+                <h2 class="mb-4">
+                  Library Management System<span style="color: #feca05">
+                    Login</span
+                  >
+                </h2>
+                <p class="mb-8">Please log in to the LMS portal</p>
+
+                <% if (error) { %>
+                    <div class="alert alert-danger">
+                        <%= error %>
+                    </div>
+                <% } %>
+
+                <form action="/login" method="POST">
+                  <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"
+                        ><i class="feather icon-mail"></i
+                      ></span>
+                    </div>
+                    <input
+                      type="email"
+                      name="email"
+                      class="form-control"
+                      placeholder="Email"
+                    />
+                  </div>
+                  <div class="input-group mb-4">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"
+                        ><i class="feather icon-lock"></i
+                      ></span>
+                    </div>
+                    <input
+                      type="password"
+                      name="password"
+                      class="form-control"
+                      placeholder="Password"
+                    />
+                  </div>
+                  <button type="submit" class="btn btn-warning mb-4">
+                    LOGIN
+                  </button>
+                </form>
+              </div>
+            </div>
+            <div class="col-md-6 d-none d-md-block">
+              <img
+                src="/assets/images/auth/img-auth-2.jpg"
+                alt=""
+                class="img-fluid d-block w-100"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Required Js -->
+    <script src="/assets/js/vendor-all.min.js"></script>
+    <script src="/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+  </body>
+</html>
