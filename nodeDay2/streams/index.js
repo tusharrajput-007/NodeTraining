@@ -1,35 +1,58 @@
 const http = require("http");
 const fs = require("fs");
 const path = require("path");
+const { Transform } = require("stream");
 
 const server = http.createServer((req, res) => {
   if (req.url === "/employees" && req.method === "GET") {
     const filePath = path.join(__dirname, "employees.csv");
     const readStream = fs.createReadStream(filePath, "utf-8");
 
-    let rawData = "";
+    let isFirstLine = true; // to deal with the first header line
+    let headers = [];
+    let salaryIndex = -1;
+    let leftover = ""; // incomplete part from the last of previous chunk
 
-    readStream.on("data", (chunk) => {
-      rawData += chunk;
+    const filterTransform = new Transform({
+      transform(chunk, encoding, callback) {
+        const lines = (leftover + chunk.toString()).split("\n");
+        leftover = lines.pop(); // last incomplete line saved for next chunk (for next iteration)
+
+        for (let line of lines) {
+          line = line.trim();
+          if (!line) continue;
+
+          if (isFirstLine) {
+            headers = line.split(",");
+            salaryIndex = headers.indexOf("SALARY");
+            this.push(line + "\n"); // push header to response
+            isFirstLine = false;
+            continue;
+          }
+
+          const columns = line.split(",");
+          if (parseFloat(columns[salaryIndex]) > 10000) {
+            this.push(line + "\n"); // push filtered line to response
+          }
+        }
+        callback();
+      },
+
+      flush(callback) {
+        // is called when no more chunks remains
+        // process the last remaining line
+        if (leftover.trim()) {
+          const columns = leftover.trim().split(",");
+          if (parseFloat(columns[salaryIndex]) > 10000) {
+            this.push(leftover.trim() + "\n");
+          }
+        }
+        callback();
+      },
     });
 
-    readStream.on("end", () => {
-      //   const lines = rawData.split("\n");
-      const lines = rawData.split("\n").map((line) => line.trim());
-      const header = lines[0];
-      const headers = header.split(",");
-      const salaryIndex = headers.indexOf("SALARY");
-
-      const filtered = lines.slice(1).filter((line) => {
-        const columns = line.split(",");
-        return parseFloat(columns[salaryIndex]) > 10000;
-      });
-
-      const result = [header, ...filtered].join("\n");
-
-      res.writeHead(200, { "Content-Type": "text/plain" });
-      res.end(result);
-    });
+    res.writeHead(200, { "Content-Type": "text/plain" });
+    readStream.pipe(filterTransform).pipe(res); // piping the readstream with transform stream
 
     readStream.on("error", (err) => {
       res.writeHead(500, { "Content-Type": "application/json" });
