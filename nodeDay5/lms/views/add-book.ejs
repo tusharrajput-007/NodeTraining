@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>LMS - Add Book</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="icon" href="/assets/images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/assets/fonts/fontawesome/css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="/assets/plugins/animation/css/animate.min.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/pages/pages.css">
+</head>
+<body>
+    <div class="loader-bg">
+        <div class="loader-track">
+            <div class="loader-fill"></div>
+        </div>
+    </div>
+
+    <%- include('partials/sidebar') %>
+    <%- include('partials/header') %>
+
+    <section class="pcoded-main-container">
+        <div class="pcoded-wrapper">
+            <div class="pcoded-content">
+                <div class="pcoded-inner-content">
+                    <div class="main-body">
+                        <div class="page-wrapper">
+                            <div class="page-header">
+                                <div class="page-block">
+                                    <div class="row align-items-center">
+                                        <div class="col-md-12">
+                                            <div class="page-header-title">
+                                                <h5 class="m-b-10">Add Book</h5>
+                                            </div>
+                                            <ul class="breadcrumb">
+                                                <li class="breadcrumb-item"><a href="/books"><i class="feather icon-home"></i></a></li>
+                                                <li class="breadcrumb-item"><a href="/books">Book List</a></li>
+                                                <li class="breadcrumb-item"><a href="#!">Add Book</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h5>Add Book</h5>
+                                        </div>
+                                        <div class="card-body task-data">
+                                            <% if (error) { %>
+                                            <div class="alert alert-danger"><%= error %></div>
+                                            <% } %>
+                                            <form action="/books/add" method="POST">
+                                                <div class="form-group row">
+                                                    <label class="col-sm-3 col-form-label">Book Name</label>
+                                                    <div class="col-sm-6">
+                                                        <input type="text" name="book_name" class="form-control" placeholder="Book Name" required>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-sm-3 col-form-label">Author Name</label>
+                                                    <div class="col-sm-6">
+                                                        <input type="text" name="author_name" class="form-control" placeholder="Author Name" required>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-sm-3 col-form-label">ISBN</label>
+                                                    <div class="col-sm-6">
+                                                        <input type="text" name="isbn" class="form-control" placeholder="ISBN" required>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <div class="col-sm-9 text-right">
+                                                        <button type="submit" class="btn btn-primary">Save</button>
+                                                        <a href="/books" class="btn btn-danger">Cancel</a>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="/assets/js/vendor-all.min.js"></script>
+    <script src="/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/assets/js/pcoded.min.js"></script>
+</body>
+</html>

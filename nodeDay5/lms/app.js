@@ -12,6 +12,7 @@ require("./models/student.model");
 require("./models/issuedBook.model");
 
 var indexRouter = require("./routes/index");
+var bookRouter = require("./routes/book.routes");
 
 var app = express();
 
@@ -26,6 +27,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
+app.use("/books", bookRouter);
 
 // Sync database
 sequelize
