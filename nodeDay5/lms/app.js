@@ -1,9 +1,14 @@
+require("dotenv").config();
 var createError = require("http-errors");
 var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const sequelize = require("./config/db");
+const session = require("express-session");
+const passport = require("./config/passport");
+var authRouter = require("./routes/auth.routes");
+var studentRouter = require("./routes/student.routes");
 
 // Import models
 require("./models/user.model");
@@ -22,12 +27,31 @@ app.set("view engine", "ejs");
 
 // app.use(logger("dev"));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: false })); // to parse the incoming form data
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+  }),
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use((req, res, next) => {
+  // makes user available in all views automatically without passing it manually from every controller.
+  res.locals.user = req.user || null;
+  next();
+});
+
 app.use("/", indexRouter);
+app.use("/auth", authRouter);
 app.use("/books", bookRouter);
+app.use("/students", studentRouter);
 
 // Sync database
 sequelize

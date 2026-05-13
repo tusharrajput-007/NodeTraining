@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>LMS - Edit Book</title>
+    <title>LMS - Add Student</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -32,12 +32,12 @@
                                     <div class="row align-items-center">
                                         <div class="col-md-12">
                                             <div class="page-header-title">
-                                                <h5 class="m-b-10">Edit Book</h5>
+                                                <h5 class="m-b-10">Add Student</h5>
                                             </div>
                                             <ul class="breadcrumb">
                                                 <li class="breadcrumb-item"><a href="/books"><i class="feather icon-home"></i></a></li>
-                                                <li class="breadcrumb-item"><a href="/books">Book List</a></li>
-                                                <li class="breadcrumb-item"><a href="#!">Edit Book</a></li>
+                                                <li class="breadcrumb-item"><a href="/students">Student List</a></li>
+                                                <li class="breadcrumb-item"><a href="#!">Add Student</a></li>
                                             </ul>
                                         </div>
                                     </div>
@@ -47,35 +47,53 @@
                                 <div class="col-sm-12">
                                     <div class="card">
                                         <div class="card-header">
-                                            <h5>Edit Book</h5>
+                                            <h5>Add Student</h5>
                                         </div>
                                         <div class="card-body task-data">
                                             <% if (error) { %>
                                             <div class="alert alert-danger"><%= error %></div>
                                             <% } %>
-                                            <form action="/books/edit/<%= book.id %>" method="POST">
+                                            <form action="/students/add" method="POST">
                                                 <div class="form-group row">
-                                                    <label class="col-sm-3 col-form-label">Book Name</label>
+                                                    <label class="col-sm-3 col-form-label">Student Name</label>
                                                     <div class="col-sm-6">
-                                                        <input type="text" name="book_name" class="form-control" value="<%= book.book_name %>" required>
+                                                        <input type="text" name="name" class="form-control" placeholder="Student Name" required>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    <label class="col-sm-3 col-form-label">Author Name</label>
+                                                    <label class="col-sm-3 col-form-label">Roll No.</label>
                                                     <div class="col-sm-6">
-                                                        <input type="text" name="author_name" class="form-control" value="<%= book.author_name %>" required>
+                                                        <input type="text" name="roll_no" class="form-control" placeholder="Roll No" required>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    <label class="col-sm-3 col-form-label">ISBN</label>
+                                                    <label class="col-sm-3 col-form-label">Phone No.</label>
                                                     <div class="col-sm-6">
-                                                        <input type="text" name="isbn" class="form-control" value="<%= book.isbn %>" required>
+                                                        <input type="text" name="phone" class="form-control" placeholder="Phone No">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-sm-3 col-form-label">Country</label>
+                                                    <div class="col-sm-6">
+                                                        <input type="text" name="country" class="form-control" placeholder="Country">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-sm-3 col-form-label">State</label>
+                                                    <div class="col-sm-6">
+                                                        <input type="text" name="state" class="form-control" placeholder="State">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-sm-3 col-form-label">City</label>
+                                                    <div class="col-sm-6">
+                                                        <input type="text" name="city" class="form-control" placeholder="City">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
                                                     <div class="col-sm-9 text-right">
-                                                        <button type="submit" class="btn btn-primary">Update</button>
-                                                        <a href="/books" class="btn btn-danger">Cancel</a>
+                                                        <button type="submit" class="btn btn-primary">Save</button>
+                                                        <a href="/students" class="btn btn-danger">Cancel</a>
                                                     </div>
                                                 </div>
                                             </form>
