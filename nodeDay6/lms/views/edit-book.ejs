@@ -50,10 +50,11 @@
                                             <h5>Edit Book</h5>
                                         </div>
                                         <div class="card-body task-data">
-                                            <% if (error) { %>
-                                            <div class="alert alert-danger"><%= error %></div>
-                                            <% } %>
-                                            <form action="/books/edit/<%= book.id %>" method="POST">
+
+                                            <div id="errorAlert" class="alert alert-danger" style="display:none;"></div>
+                                            <div id="successAlert" class="alert alert-success" style="display:none;"></div>
+
+                                            <form id="editBookForm">
                                                 <div class="form-group row">
                                                     <label class="col-sm-3 col-form-label">Book Name</label>
                                                     <div class="col-sm-6">
@@ -73,12 +74,25 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
+                                                    <label class="col-sm-3 col-form-label">Book Image</label>
+                                                    <div class="col-sm-6">
+                                                        <% if (book.file) { %>
+                                                        <div class="mb-2">
+                                                            <img src="/uploads/<%= book.file %>" alt="Book Image" style="height: 80px; width: 80px; object-fit: cover;">
+                                                        </div>
+                                                        <% } %>
+                                                        <input type="file" name="file" class="form-control" accept=".jpg,.jpeg,.png">
+                                                        <small class="text-muted">Leave empty to keep existing image</small>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
                                                     <div class="col-sm-9 text-right">
                                                         <button type="submit" class="btn btn-primary">Update</button>
                                                         <a href="/books" class="btn btn-danger">Cancel</a>
                                                     </div>
                                                 </div>
                                             </form>
+
                                         </div>
                                     </div>
                                 </div>
@@ -93,5 +107,39 @@
     <script src="/assets/js/vendor-all.min.js"></script>
     <script src="/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
     <script src="/assets/js/pcoded.min.js"></script>
+
+    <script>
+        $('#editBookForm').on('submit', function(e) {
+            e.preventDefault();
+
+            $('#errorAlert').hide();
+            $('#successAlert').hide();
+
+            var formData = new FormData(this);
+
+            $.ajax({
+                url: '/books/edit/<%= book.id %>',
+                type: 'POST',
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    if (response.success) {
+                        $('#successAlert').text(response.message).show();
+                        setTimeout(function() {
+                            window.location.href = '/books';
+                        }, 1000);
+                    } else {
+                        $('#errorAlert').text(response.message).show();
+                    }
+                },
+                error: function() {
+                    $('#errorAlert').text('Something went wrong').show();
+                }
+            });
+        });
+    </script>
+
 </body>
 </html>

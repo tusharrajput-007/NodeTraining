@@ -9,6 +9,7 @@ const session = require("express-session");
 const passport = require("./config/passport");
 var authRouter = require("./routes/auth.routes");
 var studentRouter = require("./routes/student.routes");
+var issueRouter = require("./routes/issue.routes");
 
 // Import models
 require("./models/user.model");
@@ -52,6 +53,7 @@ app.use("/", indexRouter);
 app.use("/auth", authRouter);
 app.use("/books", bookRouter);
 app.use("/students", studentRouter);
+app.use("/issues", issueRouter);
 
 // Sync database
 sequelize
