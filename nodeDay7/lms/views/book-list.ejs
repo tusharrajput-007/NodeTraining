@@ -1,143 +1,82 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>LMS - Book List</title>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui"
-    />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <link rel="icon" href="/assets/images/favicon.ico" type="image/x-icon" />
-    <link
-      rel="stylesheet"
-      href="/assets/fonts/fontawesome/css/fontawesome-all.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="/assets/plugins/animation/css/animate.min.css"
-    />
-    <link rel="stylesheet" href="/assets/css/style.css" />
-    <link
-      rel="stylesheet"
-      href="/assets/plugins/data-tables/css/datatables.min.css"
-    />
-    <link rel="stylesheet" href="/assets/css/pages/pages.css" />
-  </head>
-  <body>
-    <div class="loader-bg">
-      <div class="loader-track">
-        <div class="loader-fill"></div>
-      </div>
-    </div>
-
-    <%- include('partials/sidebar') %>
-    <%- include('partials/header') %>
-
-    <section class="pcoded-main-container">
-      <div class="pcoded-wrapper">
+<section class="pcoded-main-container">
+    <div class="pcoded-wrapper">
         <div class="pcoded-content">
-          <div class="pcoded-inner-content">
-            <div class="main-body">
-              <div class="page-wrapper">
-                <div class="page-header">
-                  <div class="page-block">
-                    <div class="row align-items-center">
-                      <div class="col-md-12">
-                        <div class="page-header-title">
-                          <h5 class="m-b-10">Book List</h5>
+            <div class="pcoded-inner-content">
+                <div class="main-body">
+                    <div class="page-wrapper">
+                        <div class="page-header">
+                            <div class="page-block">
+                                <div class="row align-items-center">
+                                    <div class="col-md-12">
+                                        <div class="page-header-title">
+                                            <h5 class="m-b-10">Book List</h5>
+                                        </div>
+                                        <ul class="breadcrumb">
+                                            <li class="breadcrumb-item"><a href="/books"><i class="feather icon-home"></i></a></li>
+                                            <li class="breadcrumb-item"><a href="#!">Book List</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <ul class="breadcrumb">
-                          <li class="breadcrumb-item">
-                            <a href="/books"
-                              ><i class="feather icon-home"></i
-                            ></a>
-                          </li>
-                          <li class="breadcrumb-item">
-                            <a href="#!">Book List</a>
-                          </li>
-                        </ul>
-                      </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5>Book List</h5>
+                                        <div class="card-header-right">
+                                            <a href="/books/add" class="btn btn-primary"><i class="fa fa-plus"></i> Add Book</a>
+                                        </div>
+                                    </div>
+                                    <div class="card-body task-data">
+                                        <div class="table-responsive">
+                                            <table id="simpletable" class="table dt-responsive table-striped table-bordered nowrap">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Image</th>
+                                                        <th>Book Name</th>
+                                                        <th>Author Name</th>
+                                                        <th>ISBN</th>
+                                                        <th>Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <% books.forEach(book => { %>
+                                                    <tr>
+                                                        <td>
+                                                            <% if (book.file) { %>
+                                                            <a href="/books/download/<%= book.id %>">
+                                                                <img src="/uploads/<%= book.file %>" alt="Book Image" style="height: 50px; width: 50px; object-fit: cover;">
+                                                            </a>
+                                                            <% } else { %>
+                                                            No Image
+                                                            <% } %>
+                                                        </td>
+                                                        <td><%= book.book_name %></td>
+                                                        <td><%= book.author_name %></td>
+                                                        <td><%= book.isbn %></td>
+                                                        <td>
+                                                            <a href="/books/edit/<%= book.id %>" class="btn btn-sm btn-primary"><i class="feather icon-edit"></i></a>
+                                                            <a href="/books/delete/<%= book.id %>" class="btn btn-sm btn-danger"><i class="feather icon-trash-2"></i></a>
+                                                        </td>
+                                                    </tr>
+                                                    <% }) %>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                  </div>
                 </div>
-                <div class="row">
-                  <div class="col-sm-12">
-                    <div class="card">
-                      <div class="card-header">
-                        <h5>Book List</h5>
-                        <div class="card-header-right">
-                          <a href="/books/add" class="btn btn-primary"
-                            ><i class="fa fa-plus"></i> Add Book</a
-                          >
-                        </div>
-                      </div>
-                      <div class="card-body task-data">
-                        <div class="table-responsive">
-                          <table
-                            id="simpletable"
-                            class="table dt-responsive table-striped table-bordered nowrap"
-                          >
-                            <thead>
-                              <tr>
-                                <th>Image</th>
-                                <th>Book Name</th>
-                                <th>Author Name</th>
-                                <th>ISBN</th>
-                                <th>Actions</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <% books.forEach(book => { %>
-                              <tr>
-                                <td>
-                                    <% if (book.file) { %>
-                                        <a href="/books/download/<%= book.id %>">
-                                            <img src="/uploads/<%= book.file %>" alt="Book Image" style="height: 50px; width: 50px; object-fit: cover;">
-                                        </a>
-                                    <% } else { %>
-                                    No Image
-                                    <% } %>
-                                </td>
-                                <td><%= book.book_name %></td>
-                                <td><%= book.author_name %></td>
-                                <td><%= book.isbn %></td>
-                                <td>
-                                  <a
-                                    href="/books/edit/<%= book.id %>"
-                                    class="btn btn-sm btn-primary"
-                                    ><i class="feather icon-edit"></i
-                                  ></a>
-                                  <a
-                                    href="/books/delete/<%= book.id %>"
-                                    class="btn btn-sm btn-danger"
-                                    ><i class="feather icon-trash-2"></i
-                                  ></a>
-                                </td>
-                              </tr>
-                              <% }) %>
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
-          </div>
         </div>
-      </div>
-    </section>
+    </div>
+</section>
 
-    <script src="/assets/js/vendor-all.min.js"></script>
-    <script src="/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
-    <script src="/assets/js/pcoded.min.js"></script>
-    <script src="/assets/plugins/data-tables/js/datatables.min.js"></script>
-    <script>
-      setTimeout(function () {
-        $("#simpletable").DataTable();
-      }, 600);
-    </script>
-  </body>
-</html>
+<script>
+    setTimeout(function() {
+        $('#simpletable').DataTable();
+    }, 600);
+</script>

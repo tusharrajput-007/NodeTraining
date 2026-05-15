@@ -10,6 +10,7 @@ const passport = require("./config/passport");
 var authRouter = require("./routes/auth.routes");
 var studentRouter = require("./routes/student.routes");
 var issueRouter = require("./routes/issue.routes");
+const expressLayouts = require("express-ejs-layouts");
 
 // Import models
 require("./models/user.model");
@@ -25,6 +26,8 @@ var app = express();
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
+app.use(expressLayouts);
+app.set("layout", "layout");
 
 // app.use(logger("dev"));
 app.use(express.json());

@@ -6,7 +6,7 @@ const transporter = require("../config/mailer");
 // GET /books
 const getAllBooks = async (req, res) => {
   try {
-    const books = await Book.findAll();
+    const books = await Book.findAll({ where: { is_deleted: false } });
     res.render("book-list", { books });
   } catch (err) {
     console.error(err);
@@ -22,6 +22,7 @@ const getAddBook = (req, res) => {
 // POST /books/add
 const postAddBook = async (req, res) => {
   try {
+    console.log(req.body);
     const { book_name, author_name, isbn } = req.body;
     const file = req.file ? req.file.filename : null;
 
@@ -133,16 +134,10 @@ const postEditBook = async (req, res) => {
 // GET /books/delete/:id
 const deleteBook = async (req, res) => {
   try {
-    // Check if book is currently issued
-    const issued = await IssuedBook.findOne({
-      where: { book_id: req.params.id, status: "issued" },
-    });
-
-    if (issued) {
-      return res.redirect("/books?error=Book is currently issued");
-    }
-
-    await Book.destroy({ where: { id: req.params.id } });
+    await Book.update(
+      { is_deleted: true, deleted_at: new Date() },
+      { where: { id: req.params.id } },
+    );
     res.redirect("/books");
   } catch (err) {
     console.error(err);

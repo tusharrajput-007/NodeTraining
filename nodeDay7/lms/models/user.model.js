@@ -7,7 +7,11 @@ const User = sequelize.define(
     first_name: { type: DataTypes.STRING(45), allowNull: false },
     middle_name: { type: DataTypes.STRING(45) },
     last_name: { type: DataTypes.STRING(45), allowNull: false },
-    email: { type: DataTypes.STRING(45) },
+    email: {
+      type: DataTypes.STRING(45),
+      allowNull: false,
+      unique: true,
+    },
     username: { type: DataTypes.STRING(45) },
     password: { type: DataTypes.STRING(45) },
   },

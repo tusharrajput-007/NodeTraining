@@ -18,7 +18,7 @@ const getAllIssues = async (req, res) => {
 // GET /issues/add
 const getIssueBook = async (req, res) => {
   try {
-    const books = await Book.findAll();
+    const books = await Book.findAll({ where: { is_deleted: false } });
     const students = await Student.findAll();
     res.render("issue-book", { books, students, error: null });
   } catch (err) {

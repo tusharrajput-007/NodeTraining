@@ -8,6 +8,8 @@ const Book = sequelize.define(
     author_name: { type: DataTypes.STRING(100), allowNull: false },
     isbn: { type: DataTypes.STRING(10), allowNull: false, unique: true },
     file: { type: DataTypes.STRING(100) },
+    is_deleted: { type: DataTypes.BOOLEAN, defaultValue: false },
+    deleted_at: { type: DataTypes.DATE, allowNull: true },
   },
   {
     tableName: "books",
