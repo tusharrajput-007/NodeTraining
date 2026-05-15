@@ -32,6 +32,26 @@ const postIssueBook = async (req, res) => {
   try {
     const { book_id, student_id } = req.body;
 
+    // Server side validation
+    if (!book_id || book_id === "") {
+      const books = await Book.findAll();
+      const students = await Student.findAll();
+      return res.render("issue-book", {
+        books,
+        students,
+        error: "Please select a book",
+      });
+    }
+    if (!student_id || student_id === "") {
+      const books = await Book.findAll();
+      const students = await Student.findAll();
+      return res.render("issue-book", {
+        books,
+        students,
+        error: "Please select a student",
+      });
+    }
+
     // Check if book is already issued
     const existing = await IssuedBook.findOne({
       where: { book_id, status: "issued" },

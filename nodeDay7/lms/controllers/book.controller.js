@@ -25,13 +25,29 @@ const postAddBook = async (req, res) => {
     const { book_name, author_name, isbn } = req.body;
     const file = req.file ? req.file.filename : null;
 
+    // Server side validation
+    if (!book_name || book_name.trim() === "") {
+      return res.json({ success: false, message: "Book name is required" });
+    }
+    if (!author_name || author_name.trim() === "") {
+      return res.json({ success: false, message: "Author name is required" });
+    }
+    if (!isbn || isbn.trim() === "") {
+      return res.json({ success: false, message: "ISBN is required" });
+    }
+
     // Check duplicate ISBN
     const existing = await Book.findOne({ where: { isbn } });
     if (existing) {
       return res.json({ success: false, message: "ISBN already exists" });
     }
 
-    await Book.create({ book_name, author_name, isbn, file });
+    await Book.create({
+      book_name: book_name.trim(),
+      author_name: author_name.trim(),
+      isbn: isbn.trim(),
+      file,
+    });
 
     // Send email
     const mailOptions = {
@@ -82,14 +98,28 @@ const postEditBook = async (req, res) => {
     const { id } = req.params;
     const file = req.file ? req.file.filename : null;
 
+    // Server side validation
+    if (!book_name || book_name.trim() === "") {
+      return res.json({ success: false, message: "Book name is required" });
+    }
+    if (!author_name || author_name.trim() === "") {
+      return res.json({ success: false, message: "Author name is required" });
+    }
+    if (!isbn || isbn.trim() === "") {
+      return res.json({ success: false, message: "ISBN is required" });
+    }
+
     // Check duplicate ISBN excluding current book
     const existing = await Book.findOne({ where: { isbn } });
     if (existing && existing.id != id) {
       return res.json({ success: false, message: "ISBN already exists" });
     }
 
-    // Only update file if new one uploaded
-    const updateData = { book_name, author_name, isbn };
+    const updateData = {
+      book_name: book_name.trim(),
+      author_name: author_name.trim(),
+      isbn: isbn.trim(),
+    };
     if (file) updateData.file = file;
 
     await Book.update(updateData, { where: { id } });
