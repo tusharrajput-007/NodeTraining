@@ -1,86 +1,200 @@
 <section class="pcoded-main-container">
-    <div class="pcoded-wrapper">
-        <div class="pcoded-content">
-            <div class="pcoded-inner-content">
-                <div class="main-body">
-                    <div class="page-wrapper">
-                        <div class="page-header">
-                            <div class="page-block">
-                                <div class="row align-items-center">
-                                    <div class="col-md-12">
-                                        <div class="page-header-title">
-                                            <h5 class="m-b-10">Add Student</h5>
-                                        </div>
-                                        <ul class="breadcrumb">
-                                            <li class="breadcrumb-item"><a href="/books"><i class="feather icon-home"></i></a></li>
-                                            <li class="breadcrumb-item"><a href="/students">Student List</a></li>
-                                            <li class="breadcrumb-item"><a href="#!">Add Student</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h5>Add Student</h5>
-                                    </div>
-                                    <div class="card-body task-data">
-                                        <% if (error) { %>
-                                        <div class="alert alert-danger"><%= error %></div>
-                                        <% } %>
-                                        <form action="/students/add" method="POST">
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Student Name</label>
-                                                <div class="col-sm-6">
-                                                    <input type="text" name="name" class="form-control" placeholder="Student Name" required>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Roll No.</label>
-                                                <div class="col-sm-6">
-                                                    <input type="text" name="roll_no" class="form-control" placeholder="Roll No" required>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Phone No.</label>
-                                                <div class="col-sm-6">
-                                                    <input type="text" name="phone" class="form-control" placeholder="Phone No" required>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Country</label>
-                                                <div class="col-sm-6">
-                                                    <input type="text" name="country" class="form-control" placeholder="Country" required>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">State</label>
-                                                <div class="col-sm-6">
-                                                    <input type="text" name="state" class="form-control" placeholder="State" required>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">City</label>
-                                                <div class="col-sm-6">
-                                                    <input type="text" name="city" class="form-control" placeholder="City" required>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <div class="col-sm-9 text-right">
-                                                    <button type="submit" class="btn btn-primary">Save</button>
-                                                    <a href="/students" class="btn btn-danger">Cancel</a>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+  <div class="pcoded-wrapper">
+    <div class="pcoded-content">
+      <div class="pcoded-inner-content">
+        <div class="main-body">
+          <div class="page-wrapper">
+            <div class="page-header">
+              <div class="page-block">
+                <div class="row align-items-center">
+                  <div class="col-md-12">
+                    <div class="page-header-title">
+                      <h5 class="m-b-10">Add Student</h5>
                     </div>
+                    <ul class="breadcrumb">
+                      <li class="breadcrumb-item">
+                        <a href="/books"><i class="feather icon-home"></i></a>
+                      </li>
+                      <li class="breadcrumb-item">
+                        <a href="/students">Student List</a>
+                      </li>
+                      <li class="breadcrumb-item">
+                        <a href="#!">Add Student</a>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
+              </div>
             </div>
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="card">
+                  <div class="card-header">
+                    <h5>Add Student</h5>
+                  </div>
+                  <div class="card-body task-data">
+                    <div
+                      id="errorAlert"
+                      class="alert alert-danger"
+                      style="display: none"
+                    ></div>
+                    <div
+                      id="successAlert"
+                      class="alert alert-success"
+                      style="display: none"
+                    ></div>
+                    <form id="addStudentForm">
+                      <div class="form-group row">
+                        <label class="col-sm-3 col-form-label"
+                          >Student Name</label
+                        >
+                        <div class="col-sm-6">
+                          <input
+                            type="text"
+                            name="name"
+                            class="form-control"
+                            placeholder="Student Name"
+                          />
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Roll No.</label>
+                        <div class="col-sm-6">
+                          <input
+                            type="text"
+                            name="roll_no"
+                            class="form-control"
+                            placeholder="Roll No"
+                          />
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Phone No.</label>
+                        <div class="col-sm-6">
+                          <input
+                            type="text"
+                            name="phone"
+                            class="form-control"
+                            placeholder="Phone No"
+                          />
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Country</label>
+                        <div class="col-sm-6">
+                          <input
+                            type="text"
+                            name="country"
+                            class="form-control"
+                            placeholder="Country"
+                          />
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">State</label>
+                        <div class="col-sm-6">
+                          <input
+                            type="text"
+                            name="state"
+                            class="form-control"
+                            placeholder="State"
+                          />
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">City</label>
+                        <div class="col-sm-6">
+                          <input
+                            type="text"
+                            name="city"
+                            class="form-control"
+                            placeholder="City"
+                          />
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <div class="col-sm-9 text-right">
+                          <button type="submit" class="btn btn-primary">
+                            Save
+                          </button>
+                          <a href="/students" class="btn btn-danger">Cancel</a>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </section>
+
+<script>
+  $("#addStudentForm").on("submit", function (e) {
+    e.preventDefault();
+    $("#errorAlert").hide();
+    $("#successAlert").hide();
+
+    var name = $('input[name="name"]').val().trim();
+    var rollNo = $('input[name="roll_no"]').val().trim();
+    var phone = $('input[name="phone"]').val().trim();
+    var country = $('input[name="country"]').val().trim();
+    var state = $('input[name="state"]').val().trim();
+    var city = $('input[name="city"]').val().trim();
+
+    if (!name) {
+      $("#errorAlert").text("Student name is required").show();
+      return;
+    }
+    if (!rollNo) {
+      $("#errorAlert").text("Roll number is required").show();
+      return;
+    }
+    if (!phone) {
+      $("#errorAlert").text("Phone number is required").show();
+      return;
+    }
+    if (!country) {
+      $("#errorAlert").text("Country is required").show();
+      return;
+    }
+    if (!state) {
+      $("#errorAlert").text("State is required").show();
+      return;
+    }
+    if (!city) {
+      $("#errorAlert").text("City is required").show();
+      return;
+    }
+
+    $('button[type="submit"]').prop("disabled", true).text("Saving...");
+
+    $.ajax({
+      url: "/students/add",
+      type: "POST",
+      data: {
+        name: name,
+        roll_no: rollNo,
+        phone: phone,
+        country: country,
+        state: state,
+        city: city,
+      },
+      success: function (response) {
+        if (response.success) {
+          window.location.href = "/students?success=Student added successfully";
+        } else {
+          $("#errorAlert").text(response.message).show();
+          $('button[type="submit"]').prop("disabled", false).text("Save");
+        }
+      },
+      error: function () {
+        $("#errorAlert").text("Something went wrong").show();
+        $('button[type="submit"]').prop("disabled", false).text("Save");
+      },
+    });
+  });
+</script>

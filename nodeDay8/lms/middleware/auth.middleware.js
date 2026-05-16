@@ -1,9 +1,13 @@
 const jwt = require("jsonwebtoken");
+const logger = require("../config/logger");
 
 const verifyToken = (req, res, next) => {
   const token = req.cookies.token;
 
   if (!token) {
+    logger.warn(
+      "Unauthorized access attempt - no token - URL: " + req.originalUrl,
+    );
     return res.redirect("/login");
   }
 
@@ -12,6 +16,12 @@ const verifyToken = (req, res, next) => {
     req.user = decoded;
     next();
   } catch (err) {
+    logger.warn(
+      "Invalid or expired token - URL: " +
+        req.originalUrl +
+        " Error: " +
+        err.message,
+    );
     return res.redirect("/login");
   }
 };

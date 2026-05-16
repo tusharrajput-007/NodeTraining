@@ -1,0 +1,32 @@
+[2026-05-16 17:34:03] INFO: Server started successfully
+[2026-05-16 17:35:25] WARN: Failed login attempt - wrong password: admin@lms.com
+[2026-05-16 17:36:06] INFO: User logged in successfully: admin@lms.com
+[2026-05-16 17:36:27] INFO: Book added: Talon Mcdowell ISBN: 16271627
+[2026-05-16 17:36:51] INFO: Email sent for book: Talon Mcdowell
+[2026-05-16 17:38:08] INFO: Student added: Veda Lynch Roll No: Assumenda consequatu
+[2026-05-16 17:39:56] INFO: Server started successfully
+[2026-05-16 17:40:06] INFO: Student deleted: ID 9
+[2026-05-16 17:42:16] INFO: Book updated: Book ksdnfsd ID: 7
+[2026-05-16 18:19:59] INFO: Server started successfully
+[2026-05-16 18:20:53] INFO: Existing user logged in via Google OAuth: rajputtushar7102@gmail.com
+[2026-05-16 18:21:39] INFO: Server started successfully
+[2026-05-16 18:21:46] INFO: Server started successfully
+[2026-05-16 18:22:56] INFO: Existing user logged in via Google OAuth: rajputtushar7102@gmail.com
+[2026-05-16 18:23:40] INFO: Server started successfully
+[2026-05-16 18:23:55] INFO: Existing user logged in via Google OAuth: rajputtushar7102@gmail.com
+[2026-05-16 18:28:48] INFO: User logged out: rajputtushar7102@gmail.com
+[2026-05-16 18:28:58] INFO: Existing user logged in via Google OAuth: rajputtushar7102@gmail.com
+[2026-05-16 18:49:31] INFO: Server started successfully
+[2026-05-16 18:50:22] INFO: Existing user logged in via Google OAuth: rajputtushar7102@gmail.com
+[2026-05-16 18:51:21] INFO: Book added: Danielle Lester ISBN: 17261721
+[2026-05-16 18:51:36] INFO: Email sent for book: Danielle Lester
+[2026-05-16 18:52:20] WARN: Duplicate ISBN attempt: 17261721
+[2026-05-16 19:24:13] INFO: Server started successfully
+[2026-05-16 19:24:28] INFO: Existing user logged in via Google OAuth: rajputtushar7102@gmail.com
+[2026-05-16 19:30:10] INFO: Server started successfully
+[2026-05-16 19:30:27] INFO: Server started successfully
+[2026-05-16 19:30:44] INFO: Existing user logged in via Google OAuth: rajputtushar7102@gmail.com
+[2026-05-16 19:35:51] INFO: Server started successfully
+[2026-05-16 19:35:54] INFO: Server started successfully
+[2026-05-16 19:36:12] INFO: Server started successfully
+[2026-05-16 19:36:30] INFO: Existing user logged in via Google OAuth: rajputtushar7102@gmail.com

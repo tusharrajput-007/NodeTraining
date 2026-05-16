@@ -2,14 +2,16 @@ const Book = require("../models/book.model");
 const upload = require("../config/multer");
 const path = require("path");
 const transporter = require("../config/mailer");
+const logger = require("../config/logger");
 
 // GET /books
 const getAllBooks = async (req, res) => {
   try {
     const books = await Book.findAll({ where: { is_deleted: false } });
-    res.render("book-list", { books });
+    const success = req.query.success || null;
+    res.render("book-list", { books, success });
   } catch (err) {
-    console.error(err);
+    logger.error("Error fetching books: " + err.message);
     res.status(500).send("Something went wrong");
   }
 };
@@ -40,6 +42,7 @@ const postAddBook = async (req, res) => {
     // Check duplicate ISBN
     const existing = await Book.findOne({ where: { isbn } });
     if (existing) {
+      logger.warn("Duplicate ISBN attempt: " + isbn);
       return res.json({ success: false, message: "ISBN already exists" });
     }
 
@@ -49,6 +52,7 @@ const postAddBook = async (req, res) => {
       isbn: isbn.trim(),
       file,
     });
+    logger.info("Book added: " + book_name + " ISBN: " + isbn);
 
     // Send email
     const mailOptions = {
@@ -72,10 +76,11 @@ const postAddBook = async (req, res) => {
     };
 
     await transporter.sendMail(mailOptions);
+    logger.info("Email sent for book: " + book_name);
 
     res.json({ success: true, message: "Book added successfully" });
   } catch (err) {
-    console.error(err);
+    logger.error("Error adding book: " + err.message);
     res.json({ success: false, message: "Something went wrong" });
   }
 };
@@ -87,7 +92,7 @@ const getEditBook = async (req, res) => {
     if (!book) return res.redirect("/books");
     res.render("edit-book", { book, error: null });
   } catch (err) {
-    console.error(err);
+    logger.error("Error fetching book for edit: " + err.message);
     res.redirect("/books");
   }
 };
@@ -113,6 +118,7 @@ const postEditBook = async (req, res) => {
     // Check duplicate ISBN excluding current book
     const existing = await Book.findOne({ where: { isbn } });
     if (existing && existing.id != id) {
+      logger.warn("Duplicate ISBN on edit attempt: " + isbn);
       return res.json({ success: false, message: "ISBN already exists" });
     }
 
@@ -124,9 +130,11 @@ const postEditBook = async (req, res) => {
     if (file) updateData.file = file;
 
     await Book.update(updateData, { where: { id } });
+    logger.info("Book updated: " + book_name + " ID: " + id);
+
     res.json({ success: true, message: "Book updated successfully" });
   } catch (err) {
-    console.error(err);
+    logger.error("Error updating book: " + err.message);
     res.json({ success: false, message: "Something went wrong" });
   }
 };
@@ -138,9 +146,10 @@ const deleteBook = async (req, res) => {
       { is_deleted: true, deleted_at: new Date() },
       { where: { id: req.params.id } },
     );
-    res.redirect("/books");
+    logger.info("Book soft deleted: ID " + req.params.id);
+    res.redirect("/books?success=Book deleted successfully");
   } catch (err) {
-    console.error(err);
+    logger.error("Error deleting book: " + err.message);
     res.redirect("/books");
   }
 };
@@ -153,9 +162,10 @@ const downloadBookImage = async (req, res) => {
       return res.redirect("/books");
     }
     const filePath = path.join(__dirname, "../public/uploads/", book.file);
+    logger.info("Book image downloaded: " + book.file);
     res.download(filePath);
   } catch (err) {
-    console.error(err);
+    logger.error("Error downloading book image: " + err.message);
     res.redirect("/books");
   }
 };

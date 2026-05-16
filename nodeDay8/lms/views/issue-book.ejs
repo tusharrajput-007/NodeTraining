@@ -27,14 +27,13 @@
                                         <h5>Issue Book</h5>
                                     </div>
                                     <div class="card-body task-data">
-                                        <% if (error) { %>
-                                        <div class="alert alert-danger"><%= error %></div>
-                                        <% } %>
-                                        <form action="/issues/add" method="POST">
+                                        <div id="errorAlert" class="alert alert-danger" style="display:none;"></div>
+                                        <div id="successAlert" class="alert alert-success" style="display:none;"></div>
+                                        <form id="issueBookForm">
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Book Name</label>
                                                 <div class="col-sm-6">
-                                                    <select name="book_id" class="form-control" required>
+                                                    <select name="book_id" class="form-control">
                                                         <option value="">Select Book</option>
                                                         <% books.forEach(book => { %>
                                                         <option value="<%= book.id %>"><%= book.book_name %> (<%= book.isbn %>)</option>
@@ -45,7 +44,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Student Name</label>
                                                 <div class="col-sm-6">
-                                                    <select name="student_id" class="form-control" required>
+                                                    <select name="student_id" class="form-control">
                                                         <option value="">Select Student</option>
                                                         <% students.forEach(student => { %>
                                                         <option value="<%= student.id %>"><%= student.name %> (<%= student.roll_no %>)</option>
@@ -70,3 +69,46 @@
         </div>
     </div>
 </section>
+
+<script>
+    $('#issueBookForm').on('submit', function(e) {
+        e.preventDefault();
+        $('#errorAlert').hide();
+        $('#successAlert').hide();
+
+        var bookId = $('select[name="book_id"]').val();
+        var studentId = $('select[name="student_id"]').val();
+
+        if (!bookId) {
+            $('#errorAlert').text('Please select a book').show();
+            return;
+        }
+        if (!studentId) {
+            $('#errorAlert').text('Please select a student').show();
+            return;
+        }
+
+        $('button[type="submit"]').prop('disabled', true).text('Issuing...');
+
+        $.ajax({
+            url: '/issues/add',
+            type: 'POST',
+            data: {
+                book_id: bookId,
+                student_id: studentId
+            },
+            success: function(response) {
+                if (response.success) {
+                    window.location.href = '/issues?success=Book issued successfully';
+                } else {
+                    $('#errorAlert').text(response.message).show();
+                    $('button[type="submit"]').prop('disabled', false).text('Issue');
+                }
+            },
+            error: function() {
+                $('#errorAlert').text('Something went wrong').show();
+                $('button[type="submit"]').prop('disabled', false).text('Issue');
+            }
+        });
+    });
+</script>

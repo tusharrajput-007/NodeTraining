@@ -1,6 +1,7 @@
 const IssuedBook = require("../models/issuedBook.model");
 const Book = require("../models/book.model");
 const Student = require("../models/student.model");
+const logger = require("../config/logger");
 
 // GET /issues
 const getAllIssues = async (req, res) => {
@@ -8,9 +9,10 @@ const getAllIssues = async (req, res) => {
     const issues = await IssuedBook.findAll({
       include: [Book, Student],
     });
-    res.render("issue-list", { issues });
+    const success = req.query.success || null;
+    res.render("issue-list", { issues, success });
   } catch (err) {
-    console.error(err);
+    logger.error("Error fetching issues: " + err.message);
     res.status(500).send("Something went wrong");
   }
 };
@@ -22,7 +24,7 @@ const getIssueBook = async (req, res) => {
     const students = await Student.findAll();
     res.render("issue-book", { books, students, error: null });
   } catch (err) {
-    console.error(err);
+    logger.error("Error fetching issue book form data: " + err.message);
     res.redirect("/issues");
   }
 };
@@ -34,22 +36,10 @@ const postIssueBook = async (req, res) => {
 
     // Server side validation
     if (!book_id || book_id === "") {
-      const books = await Book.findAll();
-      const students = await Student.findAll();
-      return res.render("issue-book", {
-        books,
-        students,
-        error: "Please select a book",
-      });
+      return res.json({ success: false, message: "Please select a book" });
     }
     if (!student_id || student_id === "") {
-      const books = await Book.findAll();
-      const students = await Student.findAll();
-      return res.render("issue-book", {
-        books,
-        students,
-        error: "Please select a student",
-      });
+      return res.json({ success: false, message: "Please select a student" });
     }
 
     // Check if book is already issued
@@ -58,20 +48,18 @@ const postIssueBook = async (req, res) => {
     });
 
     if (existing) {
-      const books = await Book.findAll();
-      const students = await Student.findAll();
-      return res.render("issue-book", {
-        books,
-        students,
-        error: "Book is already issued",
-      });
+      logger.warn("Book already issued - book_id: " + book_id);
+      return res.json({ success: false, message: "Book is already issued" });
     }
 
     await IssuedBook.create({ book_id, student_id });
-    res.redirect("/issues");
+    logger.info(
+      "Book issued - book_id: " + book_id + " student_id: " + student_id,
+    );
+    res.json({ success: true, message: "Book issued successfully" });
   } catch (err) {
-    console.error(err);
-    res.redirect("/issues");
+    logger.error("Error issuing book: " + err.message);
+    res.json({ success: false, message: "Something went wrong" });
   }
 };
 
@@ -82,9 +70,10 @@ const returnBook = async (req, res) => {
       { status: "returned", return_date: new Date() },
       { where: { id: req.params.id } },
     );
-    res.redirect("/issues");
+    logger.info("Book returned - issue_id: " + req.params.id);
+    res.redirect("/issues?success=Book returned successfully");
   } catch (err) {
-    console.error(err);
+    logger.error("Error returning book: " + err.message);
     res.redirect("/issues");
   }
 };

@@ -1,12 +1,14 @@
 const Student = require("../models/student.model");
+const logger = require("../config/logger");
 
 // GET /students
 const getAllStudents = async (req, res) => {
   try {
     const students = await Student.findAll();
-    res.render("student-list", { students });
+    const success = req.query.success || null;
+    res.render("student-list", { students, success });
   } catch (err) {
-    console.error(err);
+    logger.error("Error fetching students: " + err.message);
     res.status(500).send("Something went wrong");
   }
 };
@@ -23,28 +25,31 @@ const postAddStudent = async (req, res) => {
 
     // Server side validation
     if (!name || name.trim() === "") {
-      return res.render("add-student", { error: "Student name is required" });
+      return res.json({ success: false, message: "Student name is required" });
     }
     if (!roll_no || roll_no.trim() === "") {
-      return res.render("add-student", { error: "Roll number is required" });
+      return res.json({ success: false, message: "Roll number is required" });
     }
     if (!phone || phone.trim() === "") {
-      return res.render("add-student", { error: "Phone number is required" });
+      return res.json({ success: false, message: "Phone number is required" });
     }
     if (!country || country.trim() === "") {
-      return res.render("add-student", { error: "Country is required" });
+      return res.json({ success: false, message: "Country is required" });
     }
     if (!state || state.trim() === "") {
-      return res.render("add-student", { error: "State is required" });
+      return res.json({ success: false, message: "State is required" });
     }
     if (!city || city.trim() === "") {
-      return res.render("add-student", { error: "City is required" });
+      return res.json({ success: false, message: "City is required" });
     }
 
-    // Check duplicate roll number
     const existing = await Student.findOne({ where: { roll_no } });
     if (existing) {
-      return res.render("add-student", { error: "Roll number already exists" });
+      logger.warn("Duplicate roll number attempt: " + roll_no);
+      return res.json({
+        success: false,
+        message: "Roll number already exists",
+      });
     }
 
     await Student.create({
@@ -55,10 +60,12 @@ const postAddStudent = async (req, res) => {
       state: state.trim(),
       city: city.trim(),
     });
-    res.redirect("/students");
+    logger.info("Student added: " + name + " Roll No: " + roll_no);
+
+    res.json({ success: true, message: "Student added successfully" });
   } catch (err) {
-    console.error(err);
-    res.render("add-student", { error: "Something went wrong" });
+    logger.error("Error adding student: " + err.message);
+    res.json({ success: false, message: "Something went wrong" });
   }
 };
 
@@ -66,9 +73,10 @@ const postAddStudent = async (req, res) => {
 const deleteStudent = async (req, res) => {
   try {
     await Student.destroy({ where: { id: req.params.id } });
-    res.redirect("/students");
+    logger.info("Student deleted: ID " + req.params.id);
+    res.redirect("/students?success=Student deleted successfully");
   } catch (err) {
-    console.error(err);
+    logger.error("Error deleting student: " + err.message);
     res.redirect("/students");
   }
 };

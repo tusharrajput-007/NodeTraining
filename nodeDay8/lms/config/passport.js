@@ -2,6 +2,7 @@ require("dotenv").config();
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const User = require("../models/user.model");
+const logger = require("./logger");
 
 passport.use(
   new GoogleStrategy(
@@ -26,10 +27,19 @@ passport.use(
             username: profile.emails[0].value,
             password: "google-auth",
           });
+          logger.info(
+            "New user created via Google OAuth: " + profile.emails[0].value,
+          );
+        } else {
+          logger.info(
+            "Existing user logged in via Google OAuth: " +
+              profile.emails[0].value,
+          );
         }
 
         return done(null, user);
       } catch (err) {
+        logger.error("Google OAuth error: " + err.message);
         return done(err, null);
       }
     },
@@ -45,6 +55,7 @@ passport.deserializeUser(async (id, done) => {
     const user = await User.findByPk(id);
     done(null, user);
   } catch (err) {
+    logger.error("DeserializeUser error: " + err.message);
     done(err, null);
   }
 });

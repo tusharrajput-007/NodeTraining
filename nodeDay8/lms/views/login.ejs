@@ -46,11 +46,13 @@
                     </div>
                 <% } %>
 
+                <div id="errorAlert" class="alert alert-danger" style="display:none;"></div>
+
                 <a href="/auth/google" class="btn btn-googleplus mb-2 mr-2">
                   <i class="fab fa-google-plus-g"></i> Login with Google
                 </a>
 
-                <form action="/login" method="POST">
+                <form id="loginForm" action="/login" method="POST">
                   <div class="input-group mb-2">
                     <div class="input-group-prepend">
                       <span class="input-group-text"
@@ -98,5 +100,38 @@
     <!-- Required Js -->
     <script src="/assets/js/vendor-all.min.js"></script>
     <script src="/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+
+    <script>
+    $('#loginForm').on('submit', function(e) {
+        $('#errorAlert').hide();
+
+        var email = $('input[name="email"]').val().trim();
+        var password = $('input[name="password"]').val().trim();
+
+        if (!email) {
+            e.preventDefault();
+            $('#errorAlert').text('Email is required').show();
+            return;
+        }
+
+        if (!email.includes('@')) {
+            e.preventDefault();
+            $('#errorAlert').text('Please enter a valid email').show();
+            return;
+        }
+
+        if (!password) {
+            e.preventDefault();
+            $('#errorAlert').text('Password is required').show();
+            return;
+        }
+
+        if (password.length < 6) {
+            e.preventDefault();
+            $('#errorAlert').text('Password must be at least 6 characters').show();
+            return;
+        }
+    });
+</script>
   </body>
 </html>

@@ -50,7 +50,6 @@
                             name="book_name"
                             class="form-control"
                             placeholder="Book Name"
-                            required
                           />
                         </div>
                       </div>
@@ -64,7 +63,6 @@
                             name="author_name"
                             class="form-control"
                             placeholder="Author Name"
-                            required
                           />
                         </div>
                       </div>
@@ -76,7 +74,6 @@
                             name="isbn"
                             class="form-control"
                             placeholder="ISBN"
-                            required
                           />
                         </div>
                       </div>
@@ -115,15 +112,45 @@
 
 <script>
   $("#addBookForm").on("submit", function (e) {
-    debugger;
     e.preventDefault();
     $("#errorAlert").hide();
     $("#successAlert").hide();
+
+    // Client side validation
+    var bookName = $('input[name="book_name"]').val().trim();
+    var authorName = $('input[name="author_name"]').val().trim();
+    var isbn = $('input[name="isbn"]').val().trim();
+
+    if (!bookName) {
+      $("#errorAlert").text("Book name is required").show();
+      return;
+    }
+
+    if (!authorName) {
+      $("#errorAlert").text("Author name is required").show();
+      return;
+    }
+
+    if (!isbn) {
+      $("#errorAlert").text("ISBN is required").show();
+      return;
+    }
+
+    if (isNaN(isbn)) {
+      $("#errorAlert").text("ISBN must contain numbers only").show();
+      return;
+    }
+
+    if (isbn.length > 10) {
+      $("#errorAlert").text("ISBN must not exceed 10 characters").show();
+      return;
+    }
+
+    // All valid
     $('button[type="submit"]').prop("disabled", true).text("Saving...");
 
     var formData = new FormData(this);
 
-    debugger;
     $.ajax({
       url: "/books/add",
       type: "POST",
@@ -133,10 +160,7 @@
       processData: false,
       success: function (response) {
         if (response.success) {
-          $("#successAlert").text(response.message).show();
-          setTimeout(function () {
-            window.location.href = "/books";
-          }, 1000);
+          window.location.href = "/books?success=Book added successfully";
         } else {
           $("#errorAlert").text(response.message).show();
           $('button[type="submit"]').prop("disabled", false).text("Save");
