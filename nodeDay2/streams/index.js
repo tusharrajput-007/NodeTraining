@@ -1,60 +1,45 @@
 const http = require("http");
 const fs = require("fs");
 const path = require("path");
-const { Transform } = require("stream");
+const readline = require("readline");
 
 const server = http.createServer((req, res) => {
   if (req.url === "/employees" && req.method === "GET") {
     const filePath = path.join(__dirname, "employees.csv");
-    const readStream = fs.createReadStream(filePath, "utf-8");
 
-    let isFirstLine = true; // to deal with the first header line
-    let headers = [];
-    let salaryIndex = -1;
-    let leftover = ""; // incomplete part from the last of previous chunk
-
-    const filterTransform = new Transform({
-      transform(chunk, encoding, callback) {
-        const lines = (leftover + chunk.toString()).split("\n");
-        leftover = lines.pop(); // last incomplete line saved for next chunk (for next iteration)
-
-        for (let line of lines) {
-          line = line.trim();
-          if (!line) continue;
-
-          if (isFirstLine) {
-            headers = line.split(",");
-            salaryIndex = headers.indexOf("SALARY");
-            this.push(line + "\n"); // push header to response
-            isFirstLine = false;
-            continue;
-          }
-
-          const columns = line.split(",");
-          if (parseFloat(columns[salaryIndex]) > 10000) {
-            this.push(line + "\n"); // push filtered line to response
-          }
-        }
-        callback();
-      },
-
-      flush(callback) {
-        // is called when no more chunks remains
-        // process the last remaining line
-        if (leftover.trim()) {
-          const columns = leftover.trim().split(",");
-          if (parseFloat(columns[salaryIndex]) > 10000) {
-            this.push(leftover.trim() + "\n");
-          }
-        }
-        callback();
-      },
+    const rl = readline.createInterface({
+      input: fs.createReadStream(filePath),
     });
 
-    res.writeHead(200, { "Content-Type": "text/plain" });
-    readStream.pipe(filterTransform).pipe(res); // piping the readstream with transform stream
+    let isFirstLine = true;
+    let headers = [];
+    let salaryIndex = -1;
 
-    readStream.on("error", (err) => {
+    res.writeHead(200, { "Content-Type": "text/plain" });
+
+    rl.on("line", (line) => {
+      line = line.trim();
+      if (!line) return;
+
+      if (isFirstLine) {
+        headers = line.split(",");
+        salaryIndex = headers.indexOf("SALARY");
+        res.write(line + "\n"); // writing header directly to response
+        isFirstLine = false;
+        return;
+      }
+
+      const columns = line.split(",");
+      if (parseFloat(columns[salaryIndex]) > 10000) {
+        res.write(line + "\n"); // writing filtered line directly to response
+      }
+    });
+
+    rl.on("close", () => {
+      res.end();
+    });
+
+    rl.on("error", (err) => {
       res.writeHead(500, { "Content-Type": "application/json" });
       res.end(
         JSON.stringify({ message: "Error reading file", error: err.message }),

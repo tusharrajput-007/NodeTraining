@@ -1,3 +1,22 @@
-<h1><%= message %></h1>
-<h2><%= error.status %></h2>
-<pre><%= error.stack %></pre>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>LMS - Error</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/assets/images/favicon.ico" type="image/x-icon" />
+    <link
+      rel="stylesheet"
+      href="/assets/plugins/bootstrap/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="/assets/css/style.css" />
+  </head>
+  <body>
+    <div style="text-align: center; margin-top: 150px">
+      <h1 style="font-size: 80px; color: #feca05"><%= status %></h1>
+      <h3><%= message %></h3>
+      <br />
+      <a href="/login" class="btn btn-warning">Go to Login</a>
+    </div>
+  </body>
+</html>
